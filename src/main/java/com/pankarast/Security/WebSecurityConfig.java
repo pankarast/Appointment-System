@@ -14,27 +14,23 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic() // Use HTTP Basic authentication for simplicity
+                .httpBasic()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/h2-console/**").permitAll() // Allow h2 console access without authentication
+                .requestMatchers("/h2-console/**").permitAll() // Allow H2 console access
                 // Secure API paths
-                .requestMatchers(antMatcher("/doctors/**")).permitAll()
-                .requestMatchers(antMatcher("/patients/**")).permitAll()
-                .requestMatchers(antMatcher("/appointments/**")).permitAll()
-//                .antMatchers("/doctors/**").authenticated()
-//                .antMatchers("/patients/**").authenticated()
-//                .antMatchers("/appointments/**").authenticated()
-                // Example of how to permit public access to specific paths
-                // .antMatchers("/api/public/**").permitAll()
-                .anyRequest().authenticated() // Require authentication for any other request
+                .requestMatchers(antMatcher("/doctors/**")).authenticated()
+                .requestMatchers(antMatcher("/patients/**")).authenticated()
+                .requestMatchers(antMatcher("/appointments/**")).authenticated()
+                .anyRequest().authenticated()
                 .and()
-                .csrf().ignoringRequestMatchers("/h2-console/**") // Disable CSRF for h2 console
+                .csrf().ignoringRequestMatchers("/h2-console/**") // Disable CSRF for H2 console
                 .and()
-                .headers().frameOptions().disable() // Disable frame options for h2 console
+                .headers().frameOptions().disable() // Disable frame options for H2 console
                 .and()
-                .csrf().disable(); // Optionally disable CSRF protection (consider security implications)
+                .csrf().disable(); // Consider re-enabling CSRF with appropriate exclusions
 
         return http.build();
     }
 }
+

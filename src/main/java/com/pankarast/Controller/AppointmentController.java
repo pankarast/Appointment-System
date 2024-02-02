@@ -27,9 +27,10 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<AppointmentDTO> createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
-        AppointmentDTO newAppointment = appointmentService.updateAppointment(appointmentDTO); // Assuming this method can handle creation too
-        return ResponseEntity.ok(newAppointment);
+        AppointmentDTO newAppointment = appointmentService.createAppointment(appointmentDTO);
+        return ResponseEntity.ok(appointmentService.createAppointment(appointmentDTO));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<AppointmentDTO> updateAppointment(@PathVariable Long id, @RequestBody AppointmentDTO appointmentDTO) {

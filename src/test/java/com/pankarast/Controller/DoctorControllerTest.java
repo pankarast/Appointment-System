@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -30,6 +32,7 @@ class DoctorControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void getAllDoctors() throws Exception {
         DoctorDTO doctor = new DoctorDTO();
         doctor.setId(1L);
@@ -46,6 +49,7 @@ class DoctorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void getDoctorById() throws Exception {
         Long doctorId = 1L;
         DoctorDTO doctor = new DoctorDTO();
@@ -62,6 +66,7 @@ class DoctorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void createDoctor() throws Exception {
         DoctorDTO doctor = new DoctorDTO();
         doctor.setName("Dr. New");
@@ -76,12 +81,14 @@ class DoctorControllerTest {
 
         mockMvc.perform(post("/doctors")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(doctor)))
+                        .content(objectMapper.writeValueAsString(doctor))
+                        .with(csrf())) // Include CSRF token
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)));
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void updateDoctor() throws Exception {
         Long doctorId = 1L;
         DoctorDTO doctor = new DoctorDTO();
@@ -99,6 +106,7 @@ class DoctorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void deleteDoctor() throws Exception {
         Long doctorId = 1L;
 
