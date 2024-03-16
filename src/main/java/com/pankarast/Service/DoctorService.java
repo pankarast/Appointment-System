@@ -41,6 +41,7 @@ public class DoctorService {
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
         // Update fields
         doctor.setName(doctorDTO.getName());
+        doctor.setSocialSecurityNumber(doctorDTO.getSocialSecurityNumber());
         doctor.setSpecialty(doctorDTO.getSpecialty());
         doctor.setContactDetails(doctorDTO.getContactDetails());
         doctor.setArea(doctorDTO.getArea());

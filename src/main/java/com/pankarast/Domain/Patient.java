@@ -19,6 +19,10 @@ public class Patient {
     private String socialSecurityNumber;
     @NonNull
     private String name;
+
+    @NonNull
+    private String password;
+
     @NonNull
     private String contactDetails;
 

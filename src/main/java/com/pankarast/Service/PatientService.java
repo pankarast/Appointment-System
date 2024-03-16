@@ -37,6 +37,7 @@ public class PatientService {
         // Update fields
         patient.setName(patientDTO.getName());
         patient.setSocialSecurityNumber(patientDTO.getSocialSecurityNumber());
+        patient.setPassword(patientDTO.getPassword());
         patient.setContactDetails(patientDTO.getContactDetails());
         patient = patientRepository.save(patient);
         return PatientMapper.toDTO(patient);

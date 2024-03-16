@@ -10,8 +10,9 @@ public class PatientMapper {
         dto.setId(patient.getId());
         dto.setSocialSecurityNumber(patient.getSocialSecurityNumber());
         dto.setName(patient.getName());
+        dto.setPassword(patient.getPassword());
         dto.setContactDetails(patient.getContactDetails());
-        // You can add more fields as needed
+
         return dto;
     }
 
@@ -20,8 +21,9 @@ public class PatientMapper {
         patient.setId(dto.getId());
         patient.setSocialSecurityNumber(dto.getSocialSecurityNumber());
         patient.setName(dto.getName());
+        patient.setPassword(dto.getPassword());
         patient.setContactDetails(dto.getContactDetails());
-        // You can add more fields as needed
+
         return patient;
     }
 }

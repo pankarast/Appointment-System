@@ -7,5 +7,6 @@ public class PatientDTO {
     private Long id;
     private String socialSecurityNumber;
     private String name;
+    private String password;
     private String contactDetails;
 }

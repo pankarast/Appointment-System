@@ -16,6 +16,8 @@ public class Doctor {
     private Long id;
 
     @NonNull
+    private String socialSecurityNumber;
+    @NonNull
     private String name;
     @NonNull
     private String specialty;
