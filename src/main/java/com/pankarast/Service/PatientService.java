@@ -5,6 +5,7 @@ import com.pankarast.Dto.PatientDTO;
 import com.pankarast.Mapper.PatientMapper;
 import com.pankarast.Repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,29 @@ public class PatientService {
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public boolean checkLogin(String amka, String password) {
+        Patient patient = patientRepository.findBySocialSecurityNumber(amka);
+        if (patient != null && passwordEncoder.matches(password, patient.getPassword())) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean existsByAmka(String amka) {
+        return patientRepository.findBySocialSecurityNumber(amka) != null;
+    }
+
+    public PatientDTO registerPatient(PatientDTO patientDTO) {
+        patientDTO.setPassword(passwordEncoder.encode(patientDTO.getPassword())); // Hash the password
+        Patient patient = PatientMapper.toEntity(patientDTO);
+        patient = patientRepository.save(patient);
+        return PatientMapper.toDTO(patient);
+    }
+
 
     public List<PatientDTO> findAllPatients() {
         List<Patient> patients = patientRepository.findAll();
