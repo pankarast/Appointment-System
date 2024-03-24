@@ -37,6 +37,12 @@ public class DoctorService {
         return toDTO(doctor);
     }
 
+    public List<DoctorDTO> findDoctorsByCriteria(String specialty, String area) {
+        List<Doctor> doctors = doctorRepository.findBySpecialtyAndArea(specialty, area);
+        return doctors.stream().map(DoctorMapper::toDTO).collect(Collectors.toList());
+    }
+
+
     public DoctorDTO createDoctor(DoctorDTO doctorDTO) {
         Doctor doctor = toEntity(doctorDTO); // Convert DTO to entity, ensuring no ID is set
         doctor = doctorRepository.save(doctor); // Save the new doctor

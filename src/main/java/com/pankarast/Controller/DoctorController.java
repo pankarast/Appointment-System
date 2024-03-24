@@ -18,15 +18,32 @@ public class DoctorController {
     @Autowired
     private DoctorService doctorService;
 
-    @GetMapping
-    public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
-        return ResponseEntity.ok(doctorService.findAllDoctors());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
+//        return ResponseEntity.ok(doctorService.findAllDoctors());
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getDoctorById(@PathVariable Long id) {
         return ResponseEntity.ok(doctorService.findDoctorById(id));
     }
+
+    @GetMapping
+    public ResponseEntity<List<DoctorDTO>> getDoctors(
+            @RequestParam(required = false) String specialty,
+            @RequestParam(required = false) String area) {
+
+        List<DoctorDTO> doctors;
+
+        if (specialty != null && area != null) {
+            doctors = doctorService.findDoctorsByCriteria(specialty, area);
+        } else {
+            doctors = doctorService.findAllDoctors();
+        }
+
+        return ResponseEntity.ok(doctors);
+    }
+
 
 //    @PostMapping
 //    public ResponseEntity<DoctorDTO> createDoctor(@RequestBody DoctorDTO doctorDTO) {
