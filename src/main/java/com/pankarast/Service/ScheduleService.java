@@ -31,7 +31,7 @@ public class ScheduleService {
         List<LocalTime> availableSlots = new ArrayList<>();
         final int slotDurationMinutes = 60; // Assuming 1-hour slots
 
-        // 1. Use the new repository method to fetch working hours directly
+        // 1.  Fetch all working hours for the doctor on the specified day
         List<WorkingHours> workingHoursList = workingHoursRepository.findByDoctorIdAndDayOfWeek(doctorId, date.getDayOfWeek());
 
         // 2. Fetch all appointments for the doctor on the specified date
@@ -41,7 +41,7 @@ public class ScheduleService {
                 date.plusDays(1).atStartOfDay());
 
         // Process working hours and appointments to calculate available slots
-        // Same logic as before, but now workingHoursList is directly fetched using the new method
+
         for (WorkingHours wh : workingHoursList) {
             LocalTime startTime = wh.getStartTime();
             LocalTime endTime = wh.getEndTime();

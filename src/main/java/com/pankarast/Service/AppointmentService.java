@@ -40,6 +40,13 @@ public class AppointmentService {
         return AppointmentMapper.toDTO(appointment);
     }
 
+
+    public List<AppointmentDTO> findAppointmentsByPatientId(Long patientId) {
+        List<Appointment> appointments = appointmentRepository.findByPatientId(patientId);
+        return appointments.stream().map(AppointmentMapper::toDTO).collect(Collectors.toList());
+    }
+
+
     @Transactional
     public AppointmentDTO updateAppointment(AppointmentDTO appointmentDTO) {
         Appointment appointment = appointmentRepository.findById(appointmentDTO.getId())

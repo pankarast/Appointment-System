@@ -7,10 +7,9 @@ public class PatientMapper {
 
     public static PatientDTO toDTO(Patient patient) {
         PatientDTO dto = new PatientDTO();
-
+        dto.setId(patient.getId());
         dto.setSocialSecurityNumber(patient.getSocialSecurityNumber());
         dto.setName(patient.getName());
-
         dto.setContactDetails(patient.getContactDetails());
 
         return dto;

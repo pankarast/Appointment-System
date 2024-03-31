@@ -12,6 +12,10 @@ public class DoctorDTO {
     private String specialty;
     private String contactDetails;
     private String area;
+    private String password;
+    private String formattedAddress;
+    private Double longitude;
+    private Double latitude;
     private List<WorkingHoursDTO> workingHours;
     private List<AppointmentDTO> appointments;
 

@@ -25,6 +25,16 @@ public class Doctor {
     private String contactDetails;
     @NonNull
     private String area;
+    @NonNull
+    private String password;
+
+    // Address fields directly within Doctor class
+    @NonNull
+    private String formattedAddress;
+    @NonNull
+    private Double longitude;
+    @NonNull
+    private Double latitude;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private Set<Appointment> appointments;

@@ -2,6 +2,7 @@ package com.pankarast.Controller;
 
 
 import com.pankarast.Dto.DoctorDTO;
+import com.pankarast.Dto.PatientDTO;
 import com.pankarast.Dto.WorkingHoursDTO;
 import com.pankarast.Service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/doctors")
@@ -28,6 +31,8 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.findDoctorById(id));
     }
 
+
+
     @GetMapping
     public ResponseEntity<List<DoctorDTO>> getDoctors(
             @RequestParam(required = false) String specialty,
@@ -44,7 +49,33 @@ public class DoctorController {
         return ResponseEntity.ok(doctors);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody DoctorDTO doctorDTO) {
+        DoctorDTO loggedInDoctor = doctorService.checkLogin(doctorDTO.getSocialSecurityNumber(), doctorDTO.getPassword());
 
+        if (loggedInDoctor != null) {
+            // Create a response map or a new DTO to include any additional login response information
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("user", loggedInDoctor);
+            // Include a token if using JWT or similar authentication methods
+            // response.put("token", "yourGeneratedTokenHere");
+
+            return ResponseEntity.ok().body(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed: Invalid AMKA or password");
+        }
+    }
+
+
+    @PostMapping("/signup")
+    public ResponseEntity<DoctorDTO> registerDoctor(@RequestBody DoctorDTO doctorDTO) {
+        if (doctorService.existsByAmka(doctorDTO.getSocialSecurityNumber())) {
+            return ResponseEntity.badRequest().body(null); // Doctor already exists
+        }
+        DoctorDTO newDoctor = doctorService.createDoctorWithWorkingHours(doctorDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newDoctor);
+    }
 //    @PostMapping
 //    public ResponseEntity<DoctorDTO> createDoctor(@RequestBody DoctorDTO doctorDTO) {
 //        // Ensure the DTO doesn't carry an ID for creation

@@ -18,6 +18,10 @@ public class DoctorMapper {
         dto.setContactDetails(doctor.getContactDetails());
         dto.setArea(doctor.getArea());
 
+        dto.setFormattedAddress(doctor.getFormattedAddress());
+        dto.setLongitude(doctor.getLongitude());
+        dto.setLatitude(doctor.getLatitude());
+
         if (doctor.getWorkingHours() != null && !doctor.getWorkingHours().isEmpty()) {
             List<WorkingHoursDTO> workingHoursDTOs = doctor.getWorkingHours().stream()
                     .map(wh -> WorkingHoursMapper.toDTO(wh))
@@ -38,7 +42,10 @@ public class DoctorMapper {
         doctor.setSpecialty(dto.getSpecialty());
         doctor.setContactDetails(dto.getContactDetails());
         doctor.setArea(dto.getArea());
-
+        doctor.setPassword(dto.getPassword());
+        doctor.setFormattedAddress(dto.getFormattedAddress());
+        doctor.setLongitude(dto.getLongitude());
+        doctor.setLatitude(dto.getLatitude());
         return doctor;
     }
 }

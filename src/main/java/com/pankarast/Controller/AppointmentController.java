@@ -33,6 +33,17 @@ public class AppointmentController {
         return ResponseEntity.ok(appointment);
     }
 
+
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<List<AppointmentDTO>> getAppointmentsByPatientId(@PathVariable Long patientId) {
+        List<AppointmentDTO> appointments = appointmentService.findAppointmentsByPatientId(patientId);
+        if (appointments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(appointments);
+    }
+
+
     @PostMapping
     public ResponseEntity<AppointmentDTO> createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
         AppointmentDTO newAppointment = appointmentService.createAppointment(appointmentDTO);

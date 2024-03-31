@@ -9,6 +9,7 @@ import com.pankarast.Repository.DoctorRepository;
 import com.pankarast.Repository.WorkingHoursRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -25,6 +26,9 @@ public class DoctorService {
     @Autowired
     private WorkingHoursRepository workingHoursRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<DoctorDTO> findAllDoctors() {
         List<Doctor> doctors = doctorRepository.findAll();
         // Assuming a DoctorMapper similar to AppointmentMapper exists for converting entities to DTOs
@@ -37,11 +41,29 @@ public class DoctorService {
         return toDTO(doctor);
     }
 
+    public DoctorDTO checkLogin(String amka, String password) {
+        Doctor doctor = doctorRepository.findBySocialSecurityNumber(amka);
+        if (doctor != null && passwordEncoder.matches(password, doctor.getPassword())) {
+            return DoctorMapper.toDTO(doctor); // Return patient data on successful login
+        }
+        return null; // Return null on login failure
+    }
+
+    public boolean existsByAmka(String amka) {
+        return doctorRepository.findBySocialSecurityNumber(amka) != null;
+    }
+
+
     public List<DoctorDTO> findDoctorsByCriteria(String specialty, String area) {
         List<Doctor> doctors = doctorRepository.findBySpecialtyAndArea(specialty, area);
         return doctors.stream().map(DoctorMapper::toDTO).collect(Collectors.toList());
     }
-
+    public DoctorDTO registerDoctor(DoctorDTO doctorDTO) {
+        doctorDTO.setPassword(passwordEncoder.encode(doctorDTO.getPassword())); // Hash the password
+        Doctor doctor = DoctorMapper.toEntity(doctorDTO);
+        doctor = doctorRepository.save(doctor);
+        return DoctorMapper.toDTO(doctor);
+    }
 
     public DoctorDTO createDoctor(DoctorDTO doctorDTO) {
         Doctor doctor = toEntity(doctorDTO); // Convert DTO to entity, ensuring no ID is set
@@ -58,6 +80,10 @@ public class DoctorService {
         doctor.setSpecialty(doctorDTO.getSpecialty());
         doctor.setContactDetails(doctorDTO.getContactDetails());
         doctor.setArea(doctorDTO.getArea());
+        doctor.setPassword(passwordEncoder.encode(doctorDTO.getPassword()));
+        doctor.setFormattedAddress(doctorDTO.getFormattedAddress());
+        doctor.setLongitude(doctorDTO.getLongitude());
+        doctor.setLatitude(doctorDTO.getLatitude());
 
         Doctor savedDoctor = doctorRepository.save(doctor);
 

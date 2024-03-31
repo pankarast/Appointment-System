@@ -23,13 +23,14 @@ public class PatientService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public boolean checkLogin(String amka, String password) {
+    public PatientDTO checkLogin(String amka, String password) {
         Patient patient = patientRepository.findBySocialSecurityNumber(amka);
         if (patient != null && passwordEncoder.matches(password, patient.getPassword())) {
-            return true;
+            return PatientMapper.toDTO(patient); // Return patient data on successful login
         }
-        return false;
+        return null; // Return null on login failure
     }
+
 
     public boolean existsByAmka(String amka) {
         return patientRepository.findBySocialSecurityNumber(amka) != null;

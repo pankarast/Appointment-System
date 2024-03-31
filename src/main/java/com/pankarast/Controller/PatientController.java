@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000") // Allow CORS from the React app origin
@@ -21,16 +23,22 @@ public class PatientController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody PatientDTO patientDTO) {
-        boolean isAuthenticated = patientService.checkLogin(patientDTO.getSocialSecurityNumber(), patientDTO.getPassword());
+        PatientDTO loggedInPatient = patientService.checkLogin(patientDTO.getSocialSecurityNumber(), patientDTO.getPassword());
 
-        if (isAuthenticated) {
-            // Consider creating a successful login response, possibly including JWT or another form of token.
-            return ResponseEntity.ok().build();
+        if (loggedInPatient != null) {
+            // Create a response map or a new DTO to include any additional login response information
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("user", loggedInPatient);
+            // Include a token if using JWT or similar authentication methods
+            // response.put("token", "yourGeneratedTokenHere");
+
+            return ResponseEntity.ok().body(response);
         } else {
-            // Consider providing a more specific error message or handling for failed authentication attempts.
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed: Invalid AMKA or password");
         }
     }
+
 
     @PostMapping("/signup")
     public ResponseEntity<PatientDTO> registerPatient(@RequestBody PatientDTO patientDTO) {
