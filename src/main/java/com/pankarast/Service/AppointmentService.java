@@ -46,6 +46,11 @@ public class AppointmentService {
         return appointments.stream().map(AppointmentMapper::toDTO).collect(Collectors.toList());
     }
 
+    public List<AppointmentDTO> findAppointmentsByDoctorId(Long doctorId) {
+        List<Appointment> appointments = appointmentRepository.findByDoctorId(doctorId);
+        return appointments.stream().map(AppointmentMapper::toDTO).collect(Collectors.toList());
+    }
+
 
     @Transactional
     public AppointmentDTO updateAppointment(AppointmentDTO appointmentDTO) {
@@ -89,6 +94,8 @@ public class AppointmentService {
     public void deleteAppointment(Long id) {
         appointmentRepository.deleteById(id);
     }
+
+
 }
 
 
