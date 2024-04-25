@@ -1,6 +1,5 @@
 package com.pankarast.Controller;
 
-import com.pankarast.Dto.DoctorDTO;
 import com.pankarast.Dto.PatientDTO;
 import com.pankarast.Service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,6 @@ public class PatientController {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login successful");
             response.put("user", loggedInPatient);
-            // Include a token if using JWT or similar authentication methods
-            // response.put("token", "yourGeneratedTokenHere");
 
             return ResponseEntity.ok().body(response);
         } else {

@@ -25,16 +25,16 @@ public class WebSecurityConfig {
                 .httpBasic()
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**", "/patients/login", "/patients/signup").permitAll() // Allow H2 console access and authentication endpoints
-                        .requestMatchers("/doctors/**", "/patients/**", "/appointments/**").permitAll() // This line makes all endpoints public. Consider securing appropriate endpoints.
+                        .requestMatchers("/h2-console/**", "/patients/login", "/patients/signup").permitAll()
+                        .requestMatchers("/doctors/**", "/patients/**", "/appointments/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**") // Disable CSRF for H2 console
-                        .disable() // Consider re-enabling CSRF with appropriate exclusions
+                        .ignoringRequestMatchers("/h2-console/**")
+                        .disable()
                 )
                 .headers(headers -> headers
-                        .frameOptions().disable() // Disable frame options for H2 console
+                        .frameOptions().disable()
                 );
 
         return http.build();

@@ -99,11 +99,9 @@ public class DoctorService {
             }).collect(Collectors.toList());
 
             workingHoursRepository.saveAll(workingHoursList);
-            savedDoctor.setWorkingHours(new HashSet<>(workingHoursList)); // Ensure your Doctor entity has a setter or method to add working hours
+            savedDoctor.setWorkingHours(new HashSet<>(workingHoursList));
         }
 
-        // Optionally, map the savedDoctor back to DoctorDTO, including the IDs of saved working hours, and return it
-        // For simplicity, returning the input doctorDTO; in practice, you should return a mapped version of savedDoctor
         return doctorDTO;
     }
 
@@ -111,12 +109,6 @@ public class DoctorService {
     public void updateWorkingHours(Long doctorId, List<WorkingHoursDTO> workingHoursDTOs) {
         // Fetch the doctor from the database
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
-
-        // Convert WorkingHoursDTOs to WorkingHours entities and associate them with the doctor
-        // This might involve clearing existing working hours and adding the new ones
-        // Or intelligently updating existing entries and adding/removing as needed
-
-        // Save the updated doctor entity with its new working hours
         doctorRepository.save(doctor);
     }
 

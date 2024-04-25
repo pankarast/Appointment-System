@@ -1,20 +1,17 @@
 package com.pankarast.Service;
 
 import com.pankarast.Domain.Appointment;
-import com.pankarast.Domain.Doctor;
 import com.pankarast.Domain.WorkingHours;
 import com.pankarast.Repository.AppointmentRepository;
 import com.pankarast.Repository.DoctorRepository;
 import com.pankarast.Repository.WorkingHoursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ScheduleService {

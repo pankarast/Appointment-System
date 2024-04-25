@@ -4,7 +4,6 @@ import com.pankarast.Domain.Appointment;
 import com.pankarast.Domain.Doctor;
 import com.pankarast.Domain.Patient;
 import com.pankarast.Dto.AppointmentDTO;
-import com.pankarast.Dto.PatientDTO;
 import com.pankarast.Mapper.AppointmentMapper;
 import com.pankarast.Repository.AppointmentRepository;
 import com.pankarast.Repository.DoctorRepository;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.pankarast.Mapper.AppointmentMapper.toDTO;
-import static com.pankarast.Mapper.AppointmentMapper.toEntity;
 
 @Service
 public class AppointmentService {

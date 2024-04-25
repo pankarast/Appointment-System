@@ -2,7 +2,6 @@ package com.pankarast.Controller;
 
 
 import com.pankarast.Dto.DoctorDTO;
-import com.pankarast.Dto.PatientDTO;
 import com.pankarast.Dto.WorkingHoursDTO;
 import com.pankarast.Service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,6 @@ public class DoctorController {
     @Autowired
     private DoctorService doctorService;
 
-//    @GetMapping
-//    public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
-//        return ResponseEntity.ok(doctorService.findAllDoctors());
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getDoctorById(@PathVariable Long id) {
@@ -76,14 +71,6 @@ public class DoctorController {
         DoctorDTO newDoctor = doctorService.createDoctorWithWorkingHours(doctorDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newDoctor);
     }
-//    @PostMapping
-//    public ResponseEntity<DoctorDTO> createDoctor(@RequestBody DoctorDTO doctorDTO) {
-//        // Ensure the DTO doesn't carry an ID for creation
-//        doctorDTO.setId(null); // Make sure ID is null for creation
-//        DoctorDTO newDoctor = doctorService.createDoctor(doctorDTO); // Assuming a createDoctor method exists
-//        return ResponseEntity.status(HttpStatus.CREATED).body(newDoctor);
-//    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO) {
