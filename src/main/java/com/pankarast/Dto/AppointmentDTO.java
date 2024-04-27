@@ -7,7 +7,9 @@ import java.time.LocalDateTime;
 public class AppointmentDTO {
     private Long id;
     private Long doctorId;
+    private String doctorName;
     private Long patientId;
+    private String patientName;
     private LocalDateTime appointmentTime;
     private String reason;
 }
