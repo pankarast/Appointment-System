@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.pankarast.Mapper.DoctorMapper.*;
@@ -105,24 +106,58 @@ public class DoctorService {
         return doctorDTO;
     }
 
+    @Transactional
+    public DoctorDTO updateDoctor(DoctorDTO doctorDTO) {
+        // Retrieve the existing doctor or throw if not found
+        Doctor existingDoctor = doctorRepository.findById(doctorDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-    public void updateWorkingHours(Long doctorId, List<WorkingHoursDTO> workingHoursDTOs) {
-        // Fetch the doctor from the database
-        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
-        doctorRepository.save(doctor);
+        // Update the basic details of the doctor
+        existingDoctor.setName(doctorDTO.getName());
+        existingDoctor.setPassword(passwordEncoder.encode(doctorDTO.getPassword()));
+        existingDoctor.setSpecialty(doctorDTO.getSpecialty());
+        existingDoctor.setContactDetails(doctorDTO.getContactDetails());
+        existingDoctor.setArea(doctorDTO.getArea());
+        existingDoctor.setFormattedAddress(doctorDTO.getFormattedAddress());
+        existingDoctor.setLongitude(doctorDTO.getLongitude());
+        existingDoctor.setLatitude(doctorDTO.getLatitude());
+
+
+        // Update password if provided
+        if (doctorDTO.getPassword() != null && !doctorDTO.getPassword().isEmpty()) {
+            existingDoctor.setPassword(passwordEncoder.encode(doctorDTO.getPassword()));
+        }
+
+        // Update or create working hours
+        if (doctorDTO.getWorkingHours() != null) {
+            updateWorkingHours(existingDoctor, doctorDTO.getWorkingHours());
+        }
+
+        // Save the updated doctor
+        Doctor updatedDoctor = doctorRepository.save(existingDoctor);
+
+        // Return the updated doctor details as DTO
+        return toDTO(updatedDoctor);
     }
 
-    public DoctorDTO updateDoctor(DoctorDTO doctorDTO) {
-        Doctor doctor = doctorRepository.findById(doctorDTO.getId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
-        // Update fields
-        doctor.setName(doctorDTO.getName());
-        doctor.setSocialSecurityNumber(doctorDTO.getSocialSecurityNumber());
-        doctor.setSpecialty(doctorDTO.getSpecialty());
-        doctor.setContactDetails(doctorDTO.getContactDetails());
-        doctor.setArea(doctorDTO.getArea());
-        doctor = doctorRepository.save(doctor);
-        return toDTO(doctor);
+    public void updateWorkingHours(Doctor doctor, List<WorkingHoursDTO> workingHoursDTOs) {
+        // Remove existing working hours linked to this doctor
+        workingHoursRepository.deleteAll(doctor.getWorkingHours());
+        Set <WorkingHours> workingHours = workingHoursDTOs.stream()
+                .map(whDTO -> {
+                    WorkingHours wh = new WorkingHours();
+                    wh.setDoctor(doctor);
+                    wh.setDayOfWeek(whDTO.getDayOfWeek());
+                    wh.setStartTime(whDTO.getStartTime());
+                    wh.setEndTime(whDTO.getEndTime());
+                    return wh;
+                })
+                .collect(Collectors.toSet());
+        // Update the working hours in the repository
+        workingHoursRepository.saveAll(workingHours);
+
+        // Link the new set of working hours to the doctor
+        doctor.setWorkingHours(workingHours);
     }
 
     public void deleteDoctor(Long id) {

@@ -84,12 +84,6 @@ public class DoctorController {
         return ResponseEntity.ok(createdDoctor);
     }
 
-    @PostMapping("/{id}/working-hours")
-    public ResponseEntity<Void> updateWorkingHours(@PathVariable Long id, @RequestBody List<WorkingHoursDTO> workingHours) {
-        doctorService.updateWorkingHours(id, workingHours);
-        return ResponseEntity.ok().build();
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
         doctorService.deleteDoctor(id);
