@@ -113,6 +113,7 @@ public class DoctorService {
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
         // Update the basic details of the doctor
+        existingDoctor.setSocialSecurityNumber(doctorDTO.getSocialSecurityNumber());
         existingDoctor.setName(doctorDTO.getName());
         existingDoctor.setPassword(passwordEncoder.encode(doctorDTO.getPassword()));
         existingDoctor.setSpecialty(doctorDTO.getSpecialty());

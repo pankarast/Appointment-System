@@ -65,10 +65,41 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
+    public ResponseEntity<?> updatePatient(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
+        if (patientDTO == null) {
+            return ResponseEntity.badRequest().body("Patient data must not be null");
+        }
+
+        // Check each property of PatientDTO
+        StringBuilder validationErrors = new StringBuilder();
+        if (patientDTO.getName().isEmpty()) {
+            validationErrors.append("Name cannot be null. ");
+        }
+        if (patientDTO.getSocialSecurityNumber().isEmpty()) {
+            validationErrors.append("Social Security Number cannot be null. ");
+        }
+        if (patientDTO.getPassword() == null || patientDTO.getPassword().isEmpty()) {
+            validationErrors.append("Password cannot be null. ");
+        }
+        if (patientDTO.getContactDetails().isEmpty()) {
+            validationErrors.append("Contact Details cannot be null. ");
+        }
+
+
+        // If there are any validation errors, return a bad request with the errors
+        if (validationErrors.length() > 0) {
+            return ResponseEntity.badRequest().body(validationErrors.toString());
+        }
+
+        // Set the ID and attempt to update the patient
         patientDTO.setId(id);
-        return ResponseEntity.ok(patientService.updatePatient(patientDTO));
+        PatientDTO updatedPatient = patientService.updatePatient(patientDTO);
+        if (updatedPatient == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedPatient);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {

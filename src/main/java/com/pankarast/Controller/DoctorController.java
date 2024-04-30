@@ -73,9 +73,53 @@ public class DoctorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO) {
+    public ResponseEntity<?> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO) {
+        if (doctorDTO == null) {
+            return ResponseEntity.badRequest().body("Doctor data must not be null or empty");
+        }
+        System.out.println(doctorDTO);
+        // Check each property of DoctorDTO
+        StringBuilder validationErrors = new StringBuilder();
+        if (doctorDTO.getName().isEmpty()) {
+            validationErrors.append("Name cannot be null or empty. ");
+        }
+        if (doctorDTO.getSocialSecurityNumber().isEmpty()) {
+            validationErrors.append("Social Security Number cannot be null or empty. ");
+        }
+        if (doctorDTO.getSpecialty().isEmpty()) {
+            validationErrors.append("Specialty cannot be null or empty. ");
+        }
+        if (doctorDTO.getContactDetails().isEmpty()) {
+            validationErrors.append("Contact Details cannot be null or empty. ");
+        }
+        if (doctorDTO.getArea().isEmpty()) {
+            validationErrors.append("Area cannot be null or empty. ");
+        }
+        if (doctorDTO.getPassword() == null || doctorDTO.getPassword().isEmpty()) {
+            validationErrors.append("Password cannot be null or empty. ");
+        }
+        if (doctorDTO.getFormattedAddress().isEmpty()) {
+            validationErrors.append("Formatted Address cannot be null or empty. ");
+        }
+        if (doctorDTO.getLatitude() == null || doctorDTO.getLongitude() == null) {
+            validationErrors.append("Latitude and Longitude cannot be null or empty. ");
+        }
+        if (doctorDTO.getWorkingHours() == null || doctorDTO.getWorkingHours().isEmpty()) {
+            validationErrors.append("Working hours cannot be null or empty. ");
+        }
+
+        // If there are any validation errors, return a bad request with the errors
+        if (validationErrors.length() > 0) {
+            return ResponseEntity.badRequest().body(validationErrors.toString());
+        }
+
+        // Set the ID and attempt to update the doctor
         doctorDTO.setId(id);
-        return ResponseEntity.ok(doctorService.updateDoctor(doctorDTO));
+        DoctorDTO updatedDoctor = doctorService.updateDoctor(doctorDTO);
+        if (updatedDoctor == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedDoctor);
     }
 
     @PostMapping
